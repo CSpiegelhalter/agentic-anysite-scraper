@@ -1,0 +1,47 @@
+{
+    "compilerOptions": {
+      /* Modern JS output + iterable Maps/Sets, async/await, etc. */
+      "target": "ES2020",
+      "lib": ["DOM", "DOM.Iterable", "ES2020"],
+  
+      /* Module/bundler settings (great for Next.js, Vite, etc.) */
+      "module": "ESNext",
+      "moduleResolution": "Bundler",
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "isolatedModules": true,
+      "noEmit": true,
+  
+      /* React/Next JSX handling */
+      "jsx": "preserve",
+  
+      /* Strictness & safety */
+      "strict": true,
+      "noUncheckedIndexedAccess": true,
+      "exactOptionalPropertyTypes": true,
+      "noImplicitOverride": true,
+      "forceConsistentCasingInFileNames": true,
+      "noFallthroughCasesInSwitch": true,
+  
+      /* Performance / ergonomics */
+      "skipLibCheck": true,
+      "incremental": true,
+  
+      /* Optional: keeps for..of working even if you ever downlevel */
+      "downlevelIteration": true,
+  
+      /* Class fields semantics aligned with modern JS */
+      "useDefineForClassFields": true,
+  
+      /* JS interop */
+      "allowJs": true,
+      "checkJs": false,
+  
+      /* Types available globally (handy for tooling) */
+      "types": ["node"]
+    },
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+    "exclude": ["node_modules"]
+  }
+  

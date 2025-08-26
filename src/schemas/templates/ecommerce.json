@@ -1,0 +1,82 @@
+{
+    "name": "E-commerce Product Scraper",
+    "description": "Scrapes product information from e-commerce sites",
+    "target": {
+      "baseUrl": "https://example-store.com",
+      "startPath": "/products",
+      "maxPages": 10,
+      "maxItems": 100
+    },
+    "navigation": {
+      "type": "multi",
+      "followLinks": true,
+      "maxDepth": 2,
+      "allowedDomains": ["example-store.com"],
+      "excludedPaths": ["/cart", "/checkout", "/account"],
+      "waitFor": {
+        "selector": ".product-grid",
+        "timeout": 10000,
+        "delay": 1000
+      }
+    },
+    "selectors": {
+      "container": ".product-item",
+      "fields": {
+        "title": {
+          "selector": ".product-title",
+          "type": "text",
+          "required": true
+        },
+        "price": {
+          "selector": ".product-price",
+          "type": "text",
+          "transform": "extractCurrency"
+        },
+        "image": {
+          "selector": ".product-image img",
+          "type": "image",
+          "required": false
+        },
+        "url": {
+          "selector": ".product-link",
+          "type": "url",
+          "required": true
+        },
+        "rating": {
+          "selector": ".product-rating",
+          "type": "number",
+          "fallback": "0"
+        },
+        "availability": {
+          "selector": ".product-stock",
+          "type": "text",
+          "fallback": "Unknown"
+        }
+      },
+      "links": [
+        {
+          "selector": ".product-link",
+          "attribute": "href",
+          "follow": true
+        }
+      ]
+    },
+    "pagination": {
+      "strategy": "next-button",
+      "waitForLoad": 2000
+    },
+    "output": {
+      "format": "json",
+      "filename": "products_{timestamp}.json",
+      "includeMetadata": true,
+      "groupBy": "category"
+    },
+    "validation": {
+      "requiredFields": ["title", "price", "url"],
+      "dataTypes": {
+        "title": "string",
+        "price": "number",
+        "rating": "number"
+      }
+    }
+  }
