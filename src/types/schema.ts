@@ -13,6 +13,7 @@ export interface ScrapingConfig {
       delay: number;
     };
     output: OutputTarget;
+    debug: any
   }
 
 export interface ScrapingSchema {

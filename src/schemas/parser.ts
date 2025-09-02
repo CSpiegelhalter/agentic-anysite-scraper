@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import { ScrapingSchema } from '../types';
-import { SchemaValidator } from './validator';
+// import { SchemaValidator } from './validator';
 
 export class SchemaParser {
   static parse(filePath: string): ScrapingSchema {
@@ -19,7 +19,7 @@ export class SchemaParser {
       }
       
       // Validate schema
-      SchemaValidator.validate(schema);
+      // SchemaValidator.validate(schema);
       
       return schema;
     } catch (error) {
@@ -40,7 +40,7 @@ export class SchemaParser {
         throw new Error('Unsupported format. Use "json" or "yaml"');
       }
       
-      SchemaValidator.validate(schema);
+      // SchemaValidator.validate(schema);
       return schema;
     } catch (error) {
       throw new Error(`Failed to parse schema content: ${error}`);

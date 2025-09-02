@@ -1,0 +1,26 @@
+{
+    "name": "atlas-us-places",
+    "description": "Atlas Obscura United States places",
+    "target": {
+      "baseUrl": "https://www.atlasobscura.com",
+      "startPath": "/things-to-do/united-states/places",
+      "maxPages": 3,
+      "maxItems": 200
+    },
+    "navigation": {
+      "followLinks": false
+    },
+    "selectors": {
+      "itemRoot": "a[href^=\"/places/\"]",
+      "fields": [
+        { "name": "title", "selector": ":scope" },
+        { "name": "href",  "selector": ":scope", "attr": "href" }
+      ]
+    },
+    "output": {
+      "directory": "./output",
+      "filename": "atlas-us-places",
+      "format": "jsonl"
+    }
+  }
+  

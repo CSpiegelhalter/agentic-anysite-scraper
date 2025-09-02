@@ -34,7 +34,16 @@ async function main() {
       output: {
         directory: process.env.OUTPUT_DIR || './output',
         format: 'json'
+      },
+      debug: {
+        enabled: true,
+        dir: './.debug/snapshots',
+        dumpHtml: true,
+        dumpScreenshot: false, // enable if you want visuals
+        pretty: true,
+        maxDumps: 100
       }
+      
     };
     
     // Run scraping

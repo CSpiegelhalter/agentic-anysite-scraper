@@ -45,7 +45,7 @@ export class Logger {
     }
 
 
-    debug(msg: string, meta?: unknown) {
+    public debug(msg: string, meta?: unknown) {
         if (this.should('debug')) console.debug(this.line('debug', msg, meta));
     }
     info(msg: string, meta?: unknown) {
