@@ -40,6 +40,7 @@ export class Logger {
             name: this.name,
             msg,
         };
+        
         if (meta !== undefined) payload.meta = safeSerialize(meta);
         return JSON.stringify(payload);
     }
