@@ -1,8 +1,8 @@
-import { chromium, Browser, Page, ElementHandle, BrowserContext } from "playwright";
+import { chromium, Browser, Page, ElementHandle } from "playwright";
 import dotenv from "dotenv";
 import { z } from "zod";
 // Ensure DOM extractors are registered
-import './core/automation/init';
+import '../automation/init';
 // Import the new DOM extraction system
 
 import type { ChildProcess } from 'child_process';
@@ -66,73 +66,25 @@ export interface GraphContext {
 }
 
 export async function launchBrowser(): Promise<Browser> {
+  const headless = process.env.HEADLESS !== 'false';
+
   logger.browser.action('launch', {
-    userDataDir: process.env.DATA_DIR,
-    executablePath: process.env.PLAYWRIGHT_BROWSERS_PATH,
-    headless: process.env.HEADLESS !== "false"
+    mode: 'playwright.launch',
+    headless,
   });
 
-  try {
-    if (!process.env.DATA_DIR || !process.env.PLAYWRIGHT_BROWSERS_PATH) {
-      throw new Error('DATA_DIR and PLAYWRIGHT_BROWSERS_PATH environment variables must be defined');
-    }
+  const browser = await chromium.launch({
+    headless,
+    args: [
+      '--no-first-run',
+      '--no-default-browser-check',
+      '--disable-session-crashed-bubble',
+    ],
+  });
 
-    const { spawn } = await import('child_process');
-    const { existsSync } = await import('fs');
-    
-    // Verify paths exist
-    if (!existsSync(process.env.DATA_DIR)) {
-      throw new Error(`User data directory not found: ${process.env.DATA_DIR}`);
-    }
-    
-    // Kill any existing Chrome processes to avoid lock conflicts
-    try {
-      const { execSync } = await import('child_process');
-      execSync('taskkill /F /IM chrome.exe', { stdio: 'ignore' });
-      // Give time for file locks to be released
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    } catch (e) {
-      // Ignore if no processes were killed
-    }
-    
-    // Launch Chrome with remote debugging enabled
-    chromeProcess = spawn(
-      process.env.PLAYWRIGHT_BROWSERS_PATH,
-      [
-        '--remote-debugging-port=9222',
-        `--user-data-dir=${process.env.DATA_DIR}`,
-        '--no-first-run',
-        '--no-default-browser-check',
-        '--disable-session-crashed-bubble',
-        '--start-maximized',
-        process.env.HEADLESS !== "false" ? '--headless=new' : ''
-      ].filter(Boolean),
-      { detached: true, stdio: 'ignore' }  // Use detached: true for better persistence
-    );
-    
-    // Wait for Chrome to start properly by polling the DevTools endpoint
-    await waitForChromeDevTools(30000); // 30-second timeout
-    
-    // Connect to Chrome via CDP
-    const browser = await chromium.connectOverCDP('http://localhost:9222');
-    
-    // Clean up Chrome process when browser is disconnected
-    browser.on('disconnected', () => {
-      try {
-        if (chromeProcess && !chromeProcess.killed) {
-          chromeProcess.kill();
-        }
-      } catch (err) {
-        logger.error('Failed to kill Chrome process', err);
-      }
-    });
-
-    return browser;
-  } catch (error) {
-    logger.browser.error('launch', error);
-    throw error;
-  }
+  return browser;
 }
+
 
 // Add this helper function
 async function waitForChromeDevTools(timeoutMs = 30000): Promise<void> {
@@ -140,16 +92,20 @@ async function waitForChromeDevTools(timeoutMs = 30000): Promise<void> {
   const { default: fetch } = await import('node-fetch');
   
   logger.info('Waiting for Chrome DevTools to become available...');
+  logger.info(Date.now() - startTime < timeoutMs);
   
   while (Date.now() - startTime < timeoutMs) {
     try {
-      const response = await fetch('http://localhost:9222/json/version');
+      logger.info(Date.now() - startTime < timeoutMs);
+      const response = await fetch('http://127.0.0.1:9222/json/version');
+      logger.info(response.status);
       if (response.ok) {
         logger.info('Chrome DevTools ready!');
         return;
       }
     } catch (e) {
       // Ignore errors during polling
+      logger.info(e);
     }
     
     // Wait a bit before trying again
