@@ -103,13 +103,13 @@ export interface DOMSnapshot {
     extractorsRun: string[];
     extractorResults: {
       [extractorName: string]: {
-        duration?: number;
-        success?: boolean;
-        resultType?: string;
-        resultSize?: number | string;
-        error?: string;
-        stack?: string;
-        selector?: string;
+        duration?: number | undefined;
+        success?: boolean | undefined;
+        resultType?: string | undefined;
+        resultSize?: number | string | undefined;
+        error?: string | undefined;
+        stack?: string | undefined;
+        selector?: string | undefined;
       };
     };
     extractionTime: number;
