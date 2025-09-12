@@ -1,13 +1,14 @@
 import { Page, ElementHandle } from "playwright";
-import { Action } from "../../browserExecutor.js";
-import { ElementStrategy, ElementContext } from "./types.js";
-import { DirectSelectorStrategy } from "./strategies/DirectSelectorStrategy.js";
-import { IdSelectorStrategy } from "./strategies/IdSelectorStrategy.js";
-import { InputPatternStrategy } from "./strategies/InputPatternStrategy.js";
-import { RoleBasedStrategy } from "./strategies/RoleBasedStrategy.js";
-import { LinkStrategy } from "./strategies/LinkStrategy.js";
-import { SingleElementStrategy } from "./strategies/SingleElementStrategy.js";
-import logger from '../../utils/logger.js';
+import { ElementContext, ElementStrategy } from "./types";
+import { DirectSelectorStrategy } from "./strategies/DirectSelectorStrategy";
+import { IdSelectorStrategy } from "./strategies/IdSelectorStrategy";
+import { InputPatternStrategy } from "./strategies/InputPatternStrategy";
+import { RoleBasedStrategy } from "./strategies/RoleBasedStrategy";
+import { LinkStrategy } from "./strategies/LinkStrategy";
+import { SingleElementStrategy } from "./strategies/SingleElementStrategy";
+import { Action } from "../browser/browserManager";
+import logger from "../../utils/logger";
+
 
 export class ElementFinder {
   private strategies: ElementStrategy[] = [];
